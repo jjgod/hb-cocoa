@@ -3,8 +3,9 @@
 #include <hb-coretext.h>
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "usage: %s <PostScript-Name> <text>\n", argv[0]);
+    if (argc < 3) {
+	fprintf(stderr, "usage: %s <PostScript-Name> <text> [shaper]\n",
+		argv[0]);
         return 1;
     }
 
@@ -40,8 +41,8 @@ int main(int argc, char* argv[]) {
 
     hb_buffer_add_utf8(buffer, argv[2], -1, 0, -1);
     hb_buffer_guess_segment_properties(buffer);
-    char shaper[] = "ot";
-    char* shapers[] = { shaper, NULL };
+    const char *shaper = argc > 3 ? argv[3] : "ot";
+    const char* shapers[] = { shaper, NULL };
     hb_shape_full(font, buffer, NULL, 0, shapers);
 
     unsigned int count = hb_buffer_get_length(buffer);
